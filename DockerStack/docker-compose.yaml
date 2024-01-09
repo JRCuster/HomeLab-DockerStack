@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  pihole:
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: 'America/Chicago'
+      WEBPASSWORD: 'your_password'
+    volumes:
+      - pihole_config:/etc/pihole
+      - dnsmasq_config:/etc/dnsmasq.d
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - homeassistant_config:/config
+    ports:
+      - "8123:8123"
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  anythingllm:
+    image: your_custom/anythingllm:latest
+    ports:
+      - "1234:1234"
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  ollama-webui:
+    image: your_custom/ollama-webui:latest
+    ports:
+      - "5678:5678"
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  ollama:
+    image: your_custom/ollama:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  text-generation-webui:
+    image: your_custom/text-generation-webui:latest
+    ports:
+      - "9012:9012"
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+volumes:
+  pihole_config:
+  dnsmasq_config:
+  homeassistant_config:
