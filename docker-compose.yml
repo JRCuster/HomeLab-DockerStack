@@ -5,25 +5,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-pihole
-    # Service configuration ...
+    
 
   homeassistant:
     build:
       context: .
       dockerfile: Dockerfile-homeassistant
-    # Service configuration ...
+    
 
   anythingllm:
     build:
       context: .
       dockerfile: Dockerfile-anythingllm
-    # Service configuration ...
+    
 
   ollama:
     build:
       context: .
       dockerfile: Dockerfile-ollama
-    # Service configuration ...
-
-# Rest of the docker-compose content
-# ...
+    
