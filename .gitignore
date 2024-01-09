@@ -4,4 +4,5 @@
 # But do not ignore these directories
 !/service_directory/
 !/text-generation-webui/
+!/gpt-pilot/
 !/DockerStack/
