@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  pihole:
+    build:
+      context: ./pihole
+      dockerfile: Dockerfile
+      args:
+        VERSION: latest
+    environment:
+      TZ: YOUR_TIMEZONE
+    volumes:
+      - pihole_data:/etc/pihole
+      - dnsmasq_data:/etc/dnsmasq.d
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    restart: unless-stopped
+
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    volumes:
+     - /share/CACHEDEV1_DATA/Container/container-station-data/lib/docker/volumes/qnap/_data:/config
+    environment:
+      TZ: YOUR_TIMEZONE
+    ports:
+      - "8123:8123"
+    restart: unless-stopped
+
+  anythingllm:
+    build:
+      context: ./anythingllm
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  ollama-webui:
+    build:
+      context: ./ollama-webui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  ollama:
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+  text-generation-webui:
+    build:
+      context: ./text-generation-webui
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+
+volumes:
+  pihole_data:
+  dnsmasq_data:
+
+networks:
+  default:
+    external:
+      name: webnet
