@@ -1,0 +1,9 @@
+# Use a base image that supports multiple architectures
+FROM --platform=linux/amd64,linux/arm64,linux/arm/v7 node:14-slim
+
+# Ensure no AVX instructions are used and no GPU support
+ENV NO_AVX=1
+ENV NO_GPU=1
+
+# Rest of the Dockerfile content
+# ...
