@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  ollama-webui:
+    image: drrohin/home_lab-stack-ollama-webui:latest
+    container_name: ollama-webui
+    volumes:
+      - ./ollama-webui-data:/app/data
+    ports:
+      - "3000:8080"
+    depends_on:
+      - ollama
+    environment:
+      - "OLLAMA_API_BASE_URL=http://ollama:11434/api"
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ./ollama-data:/app/data
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    volumes:
+      - /mnt/HomeLab/The_Swarm_Manager-Storage/Disk-Image-Location/PiHole/config:/etc/pihole
+      - /mnt/HomeLab/The_Swarm_Manager-Storage/Disk-Image-Location/PiHole/dnsmasq:/etc/dnsmasq.d
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8089:80"
+      - "443:443"
+    environment:
+      TZ: 'America/Chicago'
+    restart: unless-stopped
+
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - /mnt/HomeLab/homeassistant_config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    dns: 8.8.8.8
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    volumes:
+      - type: volume
+        source: mongodb_data
+        target: /data/db
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+
+volumes:
+  ollama: {}
+  ollama-webui: {}
+  homeassistant: {}
+  pihole_config: {}
+  pihole_dnsmasq: {}
+  mongodb_data: {}
