@@ -1,19 +1,15 @@
 version: '3.8'
 services:
   ollama:
-    volumes:
-      - ollama:/root/.ollama
-    container_name: ollama
-    tty: true
-    restart: unless-stopped
     image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ./ollama-data:/app/data
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
 
   ollama-webui:
-    build:
-      context: .
-      args:
-        OLLAMA_API_BASE_URL: '/ollama/api'
-      dockerfile: Dockerfile
     image: drrohin/home_lab-stack-ollama-webui:latest
     container_name: ollama-webui
     volumes:
@@ -55,16 +51,16 @@ services:
       TZ: 'America/Chicago'
     restart: unless-stopped
 
-  mongodb:
-    container_name: mongodb
-    image: mongo:latest
-    volumes:
-      - type: volume
-        source: mongodb_data
-        target: /data/db
-    ports:
-      - "27017:27017"
-    restart: unless-stopped
+#  mongodb:
+#    container_name: mongodb
+#    image: mongo:latest
+#    volumes:
+#      - type: volume
+#        source: mongodb_data
+#        target: /data/db
+#    ports:
+#      - "27017:27017"
+#    restart: unless-stopped
 
 volumes:
   ollama: {}
@@ -72,5 +68,5 @@ volumes:
   homeassistant: {}
   pihole_config: {}
   pihole_dnsmasq: {}
-  mongodb_data: {}
+#  mongodb_data: {}
 
