@@ -5,8 +5,8 @@ services:
     container_name: pihole
     image: pihole/pihole:latest
     volumes:
-      - /mnt/HomeLab/pihole_config:/etc/pihole
-      - /mnt/HomeLab/pihole_dnsmasq:/etc/dnsmasq.d
+      - /share/HomeLab/pihole_config:/etc/pihole
+      - /share/HomeLab/pihole_dnsmasq:/etc/dnsmasq.d
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -24,7 +24,7 @@ services:
     container_name: home-assistant
     image: homeassistant/home-assistant:stable
     volumes:
-      - /mnt/HomeLab/homeassistant_config:/config
+      - /share/HomeLab/homeassistant_config:/config
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - pihole
@@ -37,32 +37,31 @@ services:
 
   ollama:
       image: drrohin/home_lab-stack-ollama:latest
-      container_name: ollama
-#      volumes:
-#        - ollama:/root/.ollama
+      volumes:
+        - /share/HomeLab/ollama:/root/.ollama
       ports:
         - "11434:11434"
       restart: unless-stopped
 
-  ollama-webui:
-    image: drrohin/home_lab-stack-ollama-webui:latest
-    container_name: ollama-webui
-    volumes:
-      - /mnt/HomeLab/ollama-webui:/app/backend/data
-      - /mnt/HomeLab/ollama-webui-config:/app/backend/config
-      - /mnt/HomeLab/ollama-webui-logs:/app/backend/logs
-      - /mnt/HomeLab/ollama-webui-models:/app/backend/models
-    depends_on:
-      - pihole
-      - homeassistant
-      - ollama
-    ports:
-      - "3000:8080"
-    environment:
-      - "OLLAMA_API_BASE_URL=http://ollama:11434/api"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: unless-stopped
+#  ollama-webui:
+#    image: drrohin/home_lab-stack-ollama-webui:latest
+#    container_name: ollama-webui
+#    volumes:
+#      - /share/HomeLab/ollama-webui:/app/backend/data
+#      - /share/HomeLab/ollama-webui-config:/app/backend/config
+#      - /share/HomeLab/ollama-webui-logs:/app/backend/logs
+#      - /share/HomeLab/ollama-webui-models:/app/backend/models
+#    depends_on:
+#      - pihole
+#      - homeassistant
+#      - ollama
+#    ports:
+#      - "3000:8080"
+#    environment:
+#      - "OLLAMA_API_BASE_URL=http://ollama:11434/api"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    restart: unless-stopped
 
 #  mongodb:
 #    container_name: mongodb
@@ -81,11 +80,11 @@ volumes:
 #  ollama-webui: {}
 #  ollama-webui-config: {}
 #  ollama-webui-logs: {}
-#  ollama-webui-models: {}
-#  homeassistant: {}
-#  homeassistant_config: {}
-#  pihole_config: {}
-#  pihole_dnsmasq: {}
+  ollama-webui-models: {}
+  homeassistant: {}
+  homeassistant_config: {}
+  pihole_config: {}
+  pihole_dnsmasq: {}
 #  mongodb_data: {}
 
 networks:
